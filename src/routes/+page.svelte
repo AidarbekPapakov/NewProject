@@ -1,4 +1,20 @@
 <script>
+	import { Deta } from 'deta'
+
+    const deta = Deta('d0g4ew7kybk_rBkZah8PE2fo531yPkzg4aWrSq5y2J8D');
+    const myNewName = deta.Base('MyNewName');
+
+    function addToDataBase() {
+        let value = {
+        key: key,
+        name:  suggestedIdea
+        }
+
+        let result = myNewName.put(value);
+    }
+
+    let randomNumber = Math.floor(Math.random()*10000);
+    let key = randomNumber.toString();    
 
     let countries = ["Greece", "Italy", "France", "New Zealand", "Portugal", "Japan", "Brazil", "USA" , "Canada", "The Maldives", "Switzerland", "Norway", "Sweden", "Finland" ]
     let cities = [
@@ -97,21 +113,13 @@
 
 {#if suggestIdeas==true}
     <div class="ideas">
-       <div class="arrayOfIdeas">
-        {#each suggestedIdeas as idea}
-            <div class="suggestedIdea">
-                {idea}
-            </div>
-            <br>
-        {/each}
-        </div>
     </div>    
     <input bind:value={suggestedIdea} placeholder="Your Idea">
-    <button class="submit" on:click={addIdeas}>Sumbit</button>
-    <button class="send" on:click={()=>{
-        suggestIdeas=false
-        sentSuggestion=true
-        }}>Send</button>
+   <button class="submit" on:click={()=>{
+    addIdeas()
+    sentSuggestion=true
+    addToDataBase()
+    }}>Sumbit</button>
 {/if}
     {#if sentSuggestion==true}
         <p class="sentSuggestion">Your message was successfuly sent!</p>
@@ -123,6 +131,20 @@
 
 
 <style>
+     select{
+        background-color: #F1F7B5;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        color:black;
+        border: 1px solid snow;
+        border-radius: 5px;
+        padding: 5px 15px;
+    }
+    option{
+        color: black;
+    }
+    option{
+        color: black;
+    }
     details{
         width: 150px;
     }
@@ -148,23 +170,6 @@
     summary:hover{
         opacity: 100%;
     }
-    .suggestedIdea{
-        border: 1px solid snow;
-        border-radius: 20px;
-        width: 150px;
-        position: relative;
-        left: -35px;
-        top: 0px;
-        padding: 5px 15px;
-    }   
-    .arrayOfIdeas{
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        position: relative;
-        top: -40px;
-        left: 670px;
-        color: white;
-        opacity: 60%;
-    }
     .ideas{
         position: relative;
         top: -500px;
@@ -185,24 +190,6 @@
         opacity: 100%;
     }
     .submit:active{
-        transform: translateY(1px);
-    }
-    .send{
-        position: relative;
-        top: -480px;
-        left: 430px;
-        border: 1px solid snow;
-        border-radius: 20px;
-        padding: 5px 15px;
-        opacity: 65%;
-        background-color: rgb(80, 80, 95);
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        color: snow;
-    }
-    .send:hover{
-        opacity: 100%;
-    }
-    .send:active{
         transform: translateY(1px);
     }
     input{
@@ -294,7 +281,8 @@
     left: 720px;
     /* background-image: linear-gradient(190deg, cyan, pink); */
     transform: translate(-50%,-50%);
-    background-image: linear-gradient(rgb(123, 226, 103), rgb(50, 216, 225));
+    background-image: linear-gradient(#F4B183, #FFD89C);
+ border: 1px rgb(46, 46, 52.5);
     background-size: 100% 3px;
     background-repeat: no-repeat;
     background-position: 100% 0%;
@@ -308,7 +296,7 @@
     background-size: 100% 100%;
     background-position: 0% 100%;
     transition: background-position .7s, background-size .5s ease-in-out;
-    -webkit-text-stroke: 0.5px darkmagenta;
+    -webkit-text-stroke: 1px rgb(46,46,52.5);
     }
     h3 {
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet', sans-serif;
@@ -318,7 +306,8 @@
     top: 220px;
     left: 720px;
     transform: translate(-50%,-50%);
-    background-image: linear-gradient(rgb(123, 226, 103), rgb(50, 216, 225));
+    background-image: linear-gradient(#F4B183, #FFD89C);
+border: 1px rgb(46, 46, 52.5);
     background-size: 100% 2px;
     background-repeat: no-repeat;
     background-position: 100% 0%;
@@ -333,7 +322,7 @@
     background-size: 100% 100%;
     background-position: 0% 100%;
     transition: background-position .7s, background-size .5s ease-in-out;
-    -webkit-text-stroke: 0.5px rgb(210, 126, 17);
+    -webkit-text-stroke: 1px rgb(46,46,52.5);
     
     }
 
