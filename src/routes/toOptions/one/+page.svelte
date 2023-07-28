@@ -92,7 +92,7 @@ h1 {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet', sans-serif;
   color: rgb(46, 46, 52,5);
   font-size: 55px;
--webkit-text-stroke: 0.5px rgb(161, 212, 33);
+-webkit-text-stroke: 0.5px #FFD966;
 }
 
 p {
