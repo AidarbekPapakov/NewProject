@@ -1,5 +1,24 @@
 <script>
 
+import { Deta } from 'deta'
+
+  const deta = Deta('d0g4ew7kybk_rBkZah8PE2fo531yPkzg4aWrSq5y2J8D');
+  const myNewName = deta.Base('MyNewName');
+
+
+
+function addToDataBase(){
+  let value = {
+    key: key,
+    name: userName,
+    review: userReview,
+    rating: userRating,
+ };
+  showUserReview=true;
+  leaveReview=false;
+  let result = myNewName.put(value);
+}
+
   let restaurants = [
       {authour: "John", name: "Take It Cheesy", review: "This place doesn`t really feel the way you might think of it at first, but as soon as you`re served with your order you`ll be surpised. The place is amazing only by it food, let alone professional and polite stuff, and the prices are not expensive at all. Recommend it and I`ll go there one more time", rating: 9.4}, 
       {authour: "Richard", name: "Wingmans Pub", review: "The food is decent, prices are really cheap, and I would say that this place is one of the most rewarding in this city!", rating: 8.6}, 
@@ -12,6 +31,15 @@
     {name: "The Bridge", image: "https://cdn.londonandpartners.com/visit/london-organisations/thames-bridges-various/86837-640x360-millennium-bridge-640.jpg", description: "The Great Bridge was built back in the 19th century in honor of the arrival of immigrants from other countries. In addition to its menstrual appearance, this bridge carries over at least 50,000 people every day!"},
     {name: "The Elephant", image: "https://cloudfront-us-east-1.images.arcpublishing.com/pmn/QOPOXXDQP5CAXPNZHCF4XSOIBE.jpg", description: "This elephant is a great asset of this city. Many people do not understand the meaning of this attraction, but if you turn to religious legends, it will immediately become clear how majestic an elephant is in the culture of this country"}
   ]
+
+ let randomNumber = Math.floor(Math.random()*10000);
+  let key = randomNumber.toString();
+  let userName;
+  let userReview;
+  let userRating=0;
+  let leaveReview = false;
+  let showUserReview = false;
+  let countForReview = 0;
 
   let publicTransportImage = "https://upload.wikimedia.org/wikipedia/commons/8/87/Istanbul_Rapid_Transit_Map_with_Metrobüs_%28schematic%29.png";
   let phrases = ["Nihao - Hello", "Bana yardim et - Help me", "Eu não falo a sua língua - I do not speak your language"]
@@ -43,7 +71,15 @@
 
 {#if data.name=="Best places to eat"}
     {#each restaurants as restaurant}
-      <button class='show' on:click={()=>{showReview=true}} on:click={()=>{nameRestaurant=restaurant.name}}>
+      <button class='show' on:click={()=>{
+        showReview=true
+        nameRestaurant=restaurant.name
+        userName=undefined
+        userReview=undefined
+        userRating=undefined
+        countForReview=0
+        leaveReview=false
+        }}>
           {restaurant.name}
       </button>
           <br><br>
@@ -59,6 +95,50 @@
               {restaurants[indexOfRestaurants].rating}☆
                   <br><br>
           </p> 
+{#if showUserReview==true && userName!=undefined}
+        <p class="authour">{userName}</p>
+          <p>
+            {userReview}
+              <br>
+            {userRating}☆
+              <br><br>
+          </p>
+          {/if}
+
+          <br><br>
+
+      
+          <button class="makeReview" on:click={
+          ()=>{
+            leaveReview=true 
+            countForReview++
+          }
+          }>Leave Your Review</button>
+          {#if countForReview>=2}
+          
+            <p class="reviewRule">You have already left your review! You cannot leave more than one review!</p>
+          
+          {/if}
+          {#if leaveReview==true && countForReview!=2}
+            <p>Your name:</p>
+
+            <input class="userName" bind:value={userName}>
+
+            <p>Your review:</p>
+
+            <input type="text" class="userReview" bind:value={userReview}>
+
+            <p>Your rating:</p>
+              {#if userRating!=undefined}
+                <p>{userRating}</p>
+              {/if}
+            <input type="range" min=0.0 max=10.0 step="0.1" class="userRating" bind:value={userRating}>
+
+              
+              
+
+            <button class="submit" on:click={addToDataBase}>Submit</button>  
+          {/if}
     {/if}
 
   {:else if data.name=="Safe&Unsafe districts of the city"}
@@ -158,6 +238,84 @@
 {/if}
 
 <style>
+.reviewRule{
+   border: 1px solid snow;
+   border-radius: 20px;
+   padding: 20px 45px;
+   width: 700px;
+   text-align: center;
+  }
+  .submit{
+    position: relative;
+    top: 200px;
+    left: 465px;
+    padding: 5px 15px;
+    border: 1px solid snow;
+    border-radius: 5px;
+    background-color: rgb(46,46,52.5);
+    color: snow;
+    font-size: 15px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    opacity: 70%;
+  }
+  .submit:hover{
+    opacity: 100%;
+  }
+  .submit:active{
+    transform: translateY(1px);
+  }
+  .userName{
+    font-size: 16px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    position: relative;
+    top: 210px;
+    left: 80px;
+    border: 1px solid beige;
+    border-radius: 10px;
+    padding: 3px 10px;
+    background-color: rgb(46,46,52.5);
+    color: snow;
+  }
+  .userReview{
+    font-size: 16px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    position: relative;
+    top: 210px;
+    left: 80px;
+    border: 1px solid beige;
+    border-radius: 10px;
+    width: 600px;
+    height: 100px;
+    padding-top: -30px;
+    background-color: rgb(46,46,52.5);
+    color: snow;
+  }
+  .userRating{
+    position: relative;
+    top: 210px;
+    left: 80px;
+    accent-color: darkseagreen;
+    height: 3px;
+  }
+  .makeReview{
+    position: relative;
+    top: 180px;
+    left: 80px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 18px;
+    padding: 5px 15px;
+    border: 1px solid snow;
+    border-radius: 8px;
+    background-color: rgb(46,46,52.5);
+    color: snow;
+    opacity: 65%;
+  }
+  .makeReview:hover{
+    opacity: 100%;
+  }
+  .makeReview:active{
+    transform: translateY(1px);
+  }
   .mapSubway{
     position: relative;
     left: 500px;
@@ -304,7 +462,7 @@
     top: 80px;
     left: 720px;
     transform: translate(-50%,-50%);
-    background-image: linear-gradient(rgb(123, 226, 103), rgb(50, 216, 225));
+    background-image: linear-gradient(#F4B183, #FFD89C);
     background-size: 100% 3px;
     background-repeat: no-repeat;
     background-position: 100% 0%;
@@ -318,7 +476,7 @@
     background-size: 100% 100%;
     background-position: 0% 100%;
     transition: background-position .7s, background-size .5s ease-in-out;
-    -webkit-text-stroke: 0.5px darkmagenta;
+    -webkit-text-stroke: 1px rgb(46,46,52,5);
  }
   .authour{
       top: 220px;
